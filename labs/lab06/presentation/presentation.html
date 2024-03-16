@@ -1,0 +1,220 @@
+\begin{frame}{Цель работы}
+\phantomsection\label{ux446ux435ux43bux44c-ux440ux430ux431ux43eux442ux44b}
+Целью данной работы является построение модели эпидемиологической
+ситуации.
+\end{frame}
+
+\begin{frame}{Задание}
+\phantomsection\label{ux437ux430ux434ux430ux43dux438ux435}
+На одном острове вспыхнула эпидемия. Известно, что из всех проживающих
+на острове (\(N=4 578\)) в момент начала эпидемии (\(t=0\)) число
+заболевших людей (являющихся распространителями инфекции) \(I(0)=78\), А
+число здоровых людей с иммунитетом к болезни \(R(0)=28\). Таким образом,
+число людей восприимчивых к болезни, но пока здоровых, в начальный
+момент времени \(S(0)=N-I(0)- R(0)\). Постройте графики изменения числа
+особей в каждой из трех групп. Рассмотрите, как будет протекать эпидемия
+в случае:
+
+\begin{enumerate}
+\item
+  если \(I(0) \leq I^{*}\)
+\item
+  если \(I(0) >  I^{*}\)
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Выполнение}
+\phantomsection\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435}
+\begin{enumerate}
+\tightlist
+\item
+  Опишем начальные условия для варианта 62 на языке Julia
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{N }\OperatorTok{=} \FloatTok{4578}
+\NormalTok{I0 }\OperatorTok{=} \FloatTok{78} \CommentTok{\# заболевшие }
+\NormalTok{R0 }\OperatorTok{=} \FloatTok{28} \CommentTok{\# с иммунитетом}
+\NormalTok{S0 }\OperatorTok{=}\NormalTok{ N }\OperatorTok{{-}}\NormalTok{ I0 }\OperatorTok{{-}}\NormalTok{ R0 }\CommentTok{\# здоровые, но восприимчивые }
+\NormalTok{alpha }\OperatorTok{=} \FloatTok{0.5} \CommentTok{\# коэффициент заболеваемости}
+\NormalTok{beta }\OperatorTok{=} \FloatTok{0.1} \CommentTok{\# коэффициент выздоровления}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Выполнение}
+\phantomsection\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-1}
+\begin{enumerate}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Зададим соответствующую систему ДУ для первого случая (больные
+  изолированы).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{function} \FunctionTok{ode\_fn}\NormalTok{(du, u, p, t)}
+\NormalTok{  S, I, R }\OperatorTok{=}\NormalTok{ u}
+\NormalTok{  du[}\FloatTok{1}\NormalTok{] }\OperatorTok{=} \FloatTok{0}
+\NormalTok{  du[}\FloatTok{2}\NormalTok{] }\OperatorTok{=} \OperatorTok{{-}}\NormalTok{beta}\OperatorTok{*}\NormalTok{u[}\FloatTok{2}\NormalTok{]}
+\NormalTok{  du[}\FloatTok{3}\NormalTok{] }\OperatorTok{=}\NormalTok{ beta}\OperatorTok{*}\NormalTok{I}
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Выполнение}
+\phantomsection\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-2}
+\begin{enumerate}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Полный исходный код представлен в репозитории. Запустим вычисление и
+  сохраним график. Давайте перейдем к расмотрению графика.
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth,height=\textheight]{image/6_1.png}
+\caption{Графики численности особей трех групп S, I, R, когда больные
+изолированы}\label{fig:001}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Выполнение}
+\phantomsection\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-3}
+\begin{enumerate}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Изменим систему дифференциальных уравнений для второго случая, когда
+  зараженные могут инфицировать особей из группы S
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{function} \FunctionTok{ode\_fn}\NormalTok{(du, u, p, t)}
+\NormalTok{  S, I, R }\OperatorTok{=}\NormalTok{ u}
+\NormalTok{  du[}\FloatTok{1}\NormalTok{] }\OperatorTok{=} \OperatorTok{{-}}\NormalTok{alpha}\OperatorTok{*}\NormalTok{u[}\FloatTok{1}\NormalTok{]}
+\NormalTok{  du[}\FloatTok{2}\NormalTok{] }\OperatorTok{=}\NormalTok{ alpha}\OperatorTok{*}\NormalTok{u[}\FloatTok{1}\NormalTok{] }\OperatorTok{{-}}\NormalTok{ beta}\OperatorTok{*}\NormalTok{u[}\FloatTok{2}\NormalTok{]}
+\NormalTok{  du[}\FloatTok{3}\NormalTok{] }\OperatorTok{=}\NormalTok{ beta}\OperatorTok{*}\NormalTok{I}
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Выполнение}
+\phantomsection\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-4}
+\begin{enumerate}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Полный исходный код представлен в репозитории. Также запустим
+  вычисления и посмотрим, что происходит с особями. Здесь мы видим, что
+  зараженные особи заражают восприимчивых особей, а после все зараженные
+  особи получают иммунитет.
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.35\textwidth,height=\textheight]{image/6_2.png}
+\caption{Графики численности особей трех групп S, I, R, когда больные не
+изолированы}\label{fig:002}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Выполнение}
+\phantomsection\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-5}
+\begin{columns}[c]
+\begin{column}{0.4\textwidth}
+\begin{enumerate}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Перейдем к OpenModelica. Далее представлен код для описания модели с
+  изоляцией. Полный исходный код представлен в репозитории.
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.6\textwidth}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{equation}
+\NormalTok{der(S) = 0;}
+\NormalTok{der(I) = {-}beta*I;}
+\NormalTok{der(R) = beta*I;}
+\end{Highlighting}
+\end{Shaded}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Выполнение}
+\phantomsection\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-6}
+\begin{enumerate}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  Если запустить симуляцию, то мы увидим следующие графики изменения
+  количества особей в трех группах.
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth,height=\textheight]{image/om6_1.png}
+\caption{Графики численности особей трех групп S, I, R, когда больные
+изолированы}\label{fig:003}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Выполнение}
+\phantomsection\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-7}
+\begin{columns}[c]
+\begin{column}{0.4\textwidth}
+\begin{enumerate}
+\setcounter{enumi}{7}
+\tightlist
+\item
+  Добавим в наше ДУ возможность заражения группы S. Полный исходный код
+  представлен в репозитории.
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.6\textwidth}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{equation}
+\NormalTok{der(S) = {-}alpha*S;}
+\NormalTok{der(I) = alpha*S {-} beta*I;}
+\NormalTok{der(R) = beta*I;}
+\end{Highlighting}
+\end{Shaded}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Выполнение}
+\phantomsection\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435-8}
+\begin{enumerate}
+\setcounter{enumi}{8}
+\tightlist
+\item
+  Перейдем к симуляции и увидим следующия изменения.
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth,height=\textheight]{image/om6_2.png}
+\caption{Графики численности особей трех групп S, I, R, когда больные не
+изолированы}\label{fig:004}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Выводы}
+\phantomsection\label{ux432ux44bux432ux43eux434ux44b}
+В итоге проделанной работы мы построили графики зависимости численности
+особей трех групп S, I, R для случаев, когда больные изолированы и когда
+они могут заражать особей группы S, на языках Julia и OpenModelica.
+\end{frame}
