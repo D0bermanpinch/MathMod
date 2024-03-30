@@ -1,0 +1,172 @@
+\begin{frame}{Цель работы}
+\phantomsection\label{ux446ux435ux43bux44c-ux440ux430ux431ux43eux442ux44b}
+Целью данной работы является построение модели конкуренции двух фирм.
+\end{frame}
+
+\begin{frame}{Задание}
+\phantomsection\label{ux437ux430ux434ux430ux43dux438ux435}
+\begin{enumerate}
+\item
+  Построить графики изменения оборотных средств фирмы 1 и фирмы 2 для
+  случая, когда конкурентная борьба ведётся только рыночными методами.
+\item
+  Построить графики изменения оборотных средств фирмы 1 и фирмы 2 для
+  случая, когда, помимо экономического фактора влияния, используются еще
+  и социально-психологические факторы.
+\end{enumerate}
+\end{frame}
+
+\section{Выполнение}\label{ux432ux44bux43fux43eux43bux43dux435ux43dux438ux435}
+
+\begin{frame}[fragile]{Первый случай}
+\phantomsection\label{ux43fux435ux440ux432ux44bux439-ux441ux43bux443ux447ux430ux439}
+\begin{enumerate}
+\tightlist
+\item
+  Опишем систему ДУ для первого случая, когда конкурентная борьба
+  ведется только рыночными методами.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\KeywordTok{function} \FunctionTok{ode\_fn}\NormalTok{(du, u, p, t)}
+\NormalTok{  du[}\FloatTok{1}\NormalTok{] }\OperatorTok{=}\NormalTok{ u[}\FloatTok{1}\NormalTok{] }\OperatorTok{{-}}\NormalTok{ b }\OperatorTok{/}\NormalTok{ c1}\OperatorTok{*}\NormalTok{u[}\FloatTok{1}\NormalTok{] }\OperatorTok{*}\NormalTok{ u[}\FloatTok{2}\NormalTok{] }\OperatorTok{{-}}\NormalTok{ a1 }\OperatorTok{/}\NormalTok{ c1}\OperatorTok{*}\NormalTok{u[}\FloatTok{1}\NormalTok{] }\OperatorTok{*}\NormalTok{ u[}\FloatTok{1}\NormalTok{]}
+\NormalTok{  du[}\FloatTok{2}\NormalTok{] }\OperatorTok{=}\NormalTok{ c2 }\OperatorTok{/}\NormalTok{ c1}\OperatorTok{*}\NormalTok{u[}\FloatTok{2}\NormalTok{] }\OperatorTok{{-}}\NormalTok{ b }\OperatorTok{/}\NormalTok{ c1}\OperatorTok{*}\NormalTok{u[}\FloatTok{1}\NormalTok{] }\OperatorTok{*}\NormalTok{ u[}\FloatTok{2}\NormalTok{] }\OperatorTok{{-}}\NormalTok{ a2 }\OperatorTok{/}\NormalTok{ c1}\OperatorTok{*}\NormalTok{u[}\FloatTok{2}\NormalTok{] }\OperatorTok{*}\NormalTok{ u[}\FloatTok{2}\NormalTok{]}
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Первый случай}
+\phantomsection\label{ux43fux435ux440ux432ux44bux439-ux441ux43bux443ux447ux430ux439-1}
+\begin{enumerate}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Зададим начальные условия, заупустим просчет и сохраним результат в
+  графики.
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{image/lab08_1.png}
+\caption{Результат моделирования 1 случая на Julia}\label{fig:001}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Первый случай}
+\phantomsection\label{ux43fux435ux440ux432ux44bux439-ux441ux43bux443ux447ux430ux439-2}
+\begin{enumerate}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Смоделируем первый случай на OpenModelica, зададим начальные значения
+  и систему ДУ.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{equation}
+\NormalTok{  der(M1) = M1 {-} b/c1*M1*M2 {-} a1/c1*M1*M1;}
+\NormalTok{  der(M2) = c2/c1*M2 {-} b/c1*M1*M2 {-} a2/c1*M2*M2;}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Первый случай}
+\phantomsection\label{ux43fux435ux440ux432ux44bux439-ux441ux43bux443ux447ux430ux439-3}
+\begin{enumerate}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Запустим симуляцию и получим следующий результат.
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{image/lab08_1om.png}
+\caption{Результат моделирования 1 случая на Modelica}\label{fig:002}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Второй случай}
+\phantomsection\label{ux432ux442ux43eux440ux43eux439-ux441ux43bux443ux447ux430ux439}
+\begin{enumerate}
+\tightlist
+\item
+  Опишем систему ДУ для второго случая, когда конкурентная борьба
+  ведется не только рыночными методами.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\KeywordTok{function} \FunctionTok{ode\_fn}\NormalTok{(du, u, p, t)}
+\NormalTok{  du[}\FloatTok{1}\NormalTok{] }\OperatorTok{=}\NormalTok{ u[}\FloatTok{1}\NormalTok{] }\OperatorTok{{-}}\NormalTok{ (b }\OperatorTok{/}\NormalTok{ c1 }\OperatorTok{+} \FloatTok{0.00062}\NormalTok{)}\OperatorTok{*}\NormalTok{u[}\FloatTok{1}\NormalTok{] }\OperatorTok{*}\NormalTok{ u[}\FloatTok{2}\NormalTok{] }\OperatorTok{{-}}\NormalTok{ a1 }\OperatorTok{/}\NormalTok{ c1}\OperatorTok{*}\NormalTok{u[}\FloatTok{1}\NormalTok{] }\OperatorTok{*}\NormalTok{ u[}\FloatTok{1}\NormalTok{]}
+\NormalTok{  du[}\FloatTok{2}\NormalTok{] }\OperatorTok{=}\NormalTok{ c2 }\OperatorTok{/}\NormalTok{ c1}\OperatorTok{*}\NormalTok{u[}\FloatTok{2}\NormalTok{] }\OperatorTok{{-}}\NormalTok{ b }\OperatorTok{/}\NormalTok{ c1}\OperatorTok{*}\NormalTok{u[}\FloatTok{1}\NormalTok{] }\OperatorTok{*}\NormalTok{ u[}\FloatTok{2}\NormalTok{] }\OperatorTok{{-}}\NormalTok{ a2 }\OperatorTok{/}\NormalTok{ c1}\OperatorTok{*}\NormalTok{u[}\FloatTok{2}\NormalTok{] }\OperatorTok{*}\NormalTok{ u[}\FloatTok{2}\NormalTok{]}
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Второй случай}
+\phantomsection\label{ux432ux442ux43eux440ux43eux439-ux441ux43bux443ux447ux430ux439-1}
+\begin{enumerate}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Зададим начальные условия, заупустим просчет и сохраним результат в
+  графики.
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{image/lab08_2.png}
+\caption{Результат моделирования 2 случая на Julia}\label{fig:003}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Второй случай}
+\phantomsection\label{ux432ux442ux43eux440ux43eux439-ux441ux43bux443ux447ux430ux439-2}
+\begin{enumerate}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Смоделируем второй случай на OpenModelica, зададим начальные значения
+  и систему ДУ.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{equation}
+\NormalTok{  der(M1) = M1 {-} (b / c1 + 0.00062) * M1 * M2 {-} a1 / c1 * M1 * M1;}
+\NormalTok{  der(M2) = c2 / c1 * M2 {-} b / c1 * M1 * M2 {-} a2 / c1 * M2 * M2;}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Второй случай}
+\phantomsection\label{ux432ux442ux43eux440ux43eux439-ux441ux43bux443ux447ux430ux439-3}
+\begin{enumerate}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Запустим симуляцию и получим следующий результат.
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{image/lab08_2om.png}
+\caption{Результат моделирования 2 случая на Modelica}\label{fig:004}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Выводы}
+\phantomsection\label{ux432ux44bux432ux43eux434ux44b}
+В итоге проделанной работы на языках Julia и OpenModelica мы построили
+графики изменения оборотных средств для двух фирм для случаев, когда
+конкурентная борьба ведётся только рыночными методами и когда, помимо
+экономического фактора влияния, используются еще и
+социально-психологические факторы.
+\end{frame}
